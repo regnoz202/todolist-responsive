@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <title>Todolist</title>
+</head>
+<body class="bg-slate-500 font-sans">
+
+    <nav class="flex max-sm:none fixed top-0 left-0 right-0 mb-1 p-2 justify-center max-sm:justify-end space-x-8 z-50 bg-slate-200 rounded-md items-center">
+        <div class="">
+            <a href="#">todolist</a>
+        </div>
+
+        <div class="max-sm:absolute max-sm:top-full max-sm:-right-full max-sm:bg-slate-400 max-sm:w-[9rem] max-sm:h-[100vh] max-sm:transition-all max-sm:p-2 max-sm:block max-sm:text-lg max-sm:rounded" id="navbar">
+            <a href="home.html" class="max-sm:px-8 max-sm:py-1 max-sm:m-2 max-sm:border-b-2 max-sm:border-b-black p-2 m-2">Home</a>
+            <a href="login.html" class="max-sm:px-8 max-sm:py-1 max-sm:m-2 max-sm:border-b-2 max-sm:border-b-black p-2 m-2">Login</a>
+            <a href="#" class="max-sm:px-8 max-sm:py-1 max-sm:m-2 max-sm:border-b-2 max-sm:border-b-black p-2 m-2">Register</a>
+        </div>
+        
+        <div class="max-sm:ml-10 sm:hidden max-sm:flex">
+            <a href="#" id="hamburgerMenu"><i data-feather="menu"></i></a>
+        </div>
+        
+    </nav>
+    
+    <div class="max-w-md mx-auto bg-slate-300 rounded-lg p-5 mt-14 shadow-lg">
+        <form name="todoForm">
+
+            <table>
+                <tr>
+                    <td><label class="font-bold" for="todo">Input</label></td>
+                    <td><input class="rounded m-1" type="text" id="todo" name="todo"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input class="px-4 p-0.5 m-1 font-bold rounded-lg text-emerald-50 bg-violet-500 hover:bg-lime-300 active:bg-lime-500 active:text-black" type="submit" value="ADD"></td>
+                </tr>
+            </table>
+        </form>
+    
+        <h1 class="font-bold">TODOLIST</h1>
+    
+        <table>
+            <thead>
+            <tr>
+                <th>FILTER:</th>
+                <th><input class="rounded m-1" type="text" name="search" id="search"></th>
+            </tr>
+            </thead>
+            <tbody id="todolistBody">
+                <tr>
+                    <td><input class="px-2 m-1 rounded font-semibold text-yellow-100 bg-blue-300 hover:bg-slate-400 hover:text-lime-200 active:bg-black focus:bg-slate-600" type="button" value="DONE"></td>
+                    <td>Todolist Description</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const navbar = document.querySelector("#navbar");
+        const hamburgerMenu = document.getElementById("hamburgerMenu")
+
+        hamburgerMenu.onclick = () =>{
+            navbar.classList.toggle("max-sm:right-0")
+            console.log("diklik")
+        }
+
+    </script>
+
+    <script>
+        const todolist = [];
+
+        function clearTodolist(){
+            const todolistBody = document.getElementById("todolistBody")
+            while(todolistBody.firstChild){
+                todolistBody.removeChild(todolistBody.firstChild)
+            }
+        }
+
+        function removeTodolist(index){
+            todolist.splice(index, 1);
+            displayTodolist();
+        }
+
+        function addTodolist(index, todo){
+            const todolistBody = document.getElementById("todolistBody")
+
+                const tr = document.createElement("tr");
+                const tdButton = document.createElement("td");
+                tr.appendChild(tdButton);
+
+                const doneButton = document.createElement("input");
+                doneButton.type = "button";
+                doneButton.value = "DONE";
+                doneButton.classList = "px-2 m-1 rounded font-semibold text-yellow-100 bg-blue-300 hover:bg-slate-400 hover:text-lime-200 active:bg-black focus:bg-slate-600"
+                doneButton.onclick = () => removeTodolist(index);
+                tdButton.appendChild(doneButton);
+
+                const tdTodo = document.createElement("td");
+                tdTodo.textContent = todo;
+                tr.appendChild(tdTodo);
+
+                todolistBody.appendChild(tr);
+        }
+
+        function displayTodolist() {
+            clearTodolist();
+
+            for (let index = 0; index < todolist.length; index++) {
+                const todo = todolist[index];
+
+                const searchText = document.getElementById("search").value.toLowerCase();
+
+                if(todo.toLowerCase().includes(searchText)){
+                    addTodolist(index, todo)
+                }
+            }
+        }
+        
+        document.forms["todoForm"].onsubmit = (event) => {
+            event.preventDefault();
+
+            const todo = document.forms["todoForm"]["todo"].value;
+
+            todolist.push(todo);
+            document.forms["todoForm"].reset();
+
+            console.log(todolist)
+            displayTodolist();
+        }
+
+        const searchInput = document.getElementById("search");
+
+        searchInput.onkeydown = () =>{
+            displayTodolist();
+        }
+
+        searchInput.onkeyup = () =>{
+            displayTodolist();
+        }
+    </script>
+
+    <script>
+        feather.replace()
+    </script>
+</body>
+</html>
